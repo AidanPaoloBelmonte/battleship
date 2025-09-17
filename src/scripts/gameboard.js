@@ -44,7 +44,7 @@ export class GameBoard {
       Math.ceil(Math.random() * lengthMaxRange),
     );
 
-    return new Ship(length, coordinates, direction);
+    return new Ship(length, coordinates.x, coordinates.y, direction);
   }
 
   checkOverlap(ship) {

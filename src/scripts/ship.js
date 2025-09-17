@@ -6,8 +6,7 @@ class Ship {
 
   constructor(length, x, y, direction) {
     this.length = length;
-    this.x = x;
-    this.y = y;
+    this.position = { x, y };
     this.direction = direction;
   }
 
