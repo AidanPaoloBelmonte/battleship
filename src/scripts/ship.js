@@ -1,9 +1,21 @@
 class Ship {
+  position = { x: 0, y: 0 };
+  direction = { x: 1, y: 0 };
   length = 0;
   hits = 0;
 
-  constructor(length) {
+  constructor(length, x, y, direction) {
     this.length = length;
+    this.x = x;
+    this.y = y;
+    this.direction = direction;
+  }
+
+  getEndPoint() {
+    return {
+      x: this.position.x + this.direction.x * this.length,
+      y: this.position.y + this.direction.y * this.length,
+    };
   }
 
   hit() {
