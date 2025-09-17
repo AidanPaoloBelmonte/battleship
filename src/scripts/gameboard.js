@@ -2,7 +2,7 @@ import Ship from "./ship";
 
 const board_size = 9;
 
-export class GameBoard {
+class GameBoard {
   ships = [];
   missed = [];
   attacked = [];
@@ -12,15 +12,15 @@ export class GameBoard {
 
     while (ships_total_length) {
       let newShip = this.generateShip();
-      if (!this.checkOverlap(newShip)) {
+      if (!this.checkShipOverlaps(newShip)) {
         this.ships.push(newShip);
-        ships_total_length -= ships[-1]?.length;
+        ships_total_length -= this.ships[-1]?.length;
       }
     }
   }
 
   generateShip(length_budget) {
-    const coordinates = {
+    const position = {
       x: Math.ceil(Math.random() * 9),
       y: Math.ceil(Math.random() * 9),
     };
@@ -28,7 +28,7 @@ export class GameBoard {
     const direction = { x: 0, y: 0 };
     const directionRandom = Math.ceil(Math.random() * 100);
     const modifier = directionRandom % 2 === 0 ? 1 : -1;
-    const basePos = 0;
+    let basePos = 0;
 
     if (directionRandom < 50) {
       basePos = position.x;
@@ -44,44 +44,48 @@ export class GameBoard {
       Math.ceil(Math.random() * lengthMaxRange),
     );
 
-    return new Ship(length, coordinates.x, coordinates.y, direction);
+    return new Ship(length, position.x, position.y, direction);
   }
 
-  checkOverlap(ship) {
-    const subject = [ship.position, ship.getEndPoint()];
+  checkShipOverlaps(ship) {
     for (let l = 0; l < this.ships.length; l++) {
-      const control = [this.ships[l].position, this.ships[l].getEndPoint()];
-
-      if (this.checkIntersect(subject, control)) return True;
+      if (checkOverlap(ship, this.ships[l])) return True;
     }
 
-    return False;
+    return false;
+  }
+
+  checkOverlap(ship, controlShip) {
+    const subject = [ship.position, ship.getEndPoint()];
+    const control = [controlShip.position, controlShip.getEndPoint()];
+
+    return this.checkIntersect(subject, control);
   }
 
   checkIntersect(subject, control) {
-    let o1 = getOrientation(subject[0], subject[1], control[0]);
-    let o2 = getOrientation(subject[0], subject[1], control[1]);
-    let o3 = getOrientation(control[0], control[1], subject[0]);
-    let o4 = getOrientation(control[0], control[1], subject[1]);
+    let o1 = this.getOrientation(subject[0], subject[1], control[0]);
+    let o2 = this.getOrientation(subject[0], subject[1], control[1]);
+    let o3 = this.getOrientation(control[0], control[1], subject[0]);
+    let o4 = this.getOrientation(control[0], control[1], subject[1]);
 
-    if (o1 !== o2 && o3 !== o4) return True;
+    if (o1 !== o2 && o3 !== o4) return true;
 
     if (o1 === 0 && this.checkOnSegment(subject[0], control[0], subject[1]))
-      return True;
+      return true;
     if (o2 === 0 && this.checkOnSegment(subject[0], control[1], subject[1]))
-      return True;
+      return true;
     if (o3 === 0 && this.checkOnSegment(control[0], subject[0], control[1]))
-      return True;
+      return true;
     if (o4 === 0 && this.checkOnSegment(control[0], subject[1], control[1]))
-      return True;
+      return true;
 
-    return False;
+    return false;
   }
 
   getOrientation(start, end, control) {
     let orientation =
-      (end[1] - start[1]) * (control[0] - end[0]) -
-      (end[0] - start[0]) * (control[1] - end[1]);
+      (end.y - start.y) * (control.x - end.x) -
+      (end.x - start.x) * (control.y - end.y);
 
     if (orientation === 0) return 0;
     return orientation > 0 ? 1 : 2;
@@ -89,10 +93,10 @@ export class GameBoard {
 
   checkOnSegment(start, end, control) {
     return (
-      end[0] <= Math.max(start[0], control[0]) &&
-      end[0] >= Math.min(start[0], control[0]) &&
-      end[1] <= Math.max(start[1], control[1]) &&
-      end[1] >= Math.min(start[1], control[1])
+      end.x <= Math.max(start.x, control.x) &&
+      end.x >= Math.min(start.x, control.x) &&
+      end.y <= Math.max(start.y, control.y) &&
+      end.y >= Math.min(start.y, control.y)
     );
   }
 
@@ -115,3 +119,5 @@ export class GameBoard {
     return ships.every((ship) => ship.isSunken());
   }
 }
+
+module.exports = GameBoard;
