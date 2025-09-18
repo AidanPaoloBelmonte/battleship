@@ -7,14 +7,17 @@ class GameBoard {
   missed = [];
   attacked = [];
 
-  constructor() {
-    let ships_total_length = Math.floor(Math.random() * 10) + 24;
+  constructor(customLengthBudget = 0) {
+    let shipsLengthBudget = customLengthBudget;
+    if (customLengthBudget <= 0)
+      shipsLengthBudget = Math.floor(Math.random() * 10) + 24;
 
-    while (ships_total_length) {
-      let newShip = this.generateShip();
+    let callCount = 0;
+    while (shipsLengthBudget > 0) {
+      let newShip = this.generateShip(shipsLengthBudget);
       if (!this.checkShipOverlaps(newShip)) {
         this.ships.push(newShip);
-        ships_total_length -= this.ships[-1]?.length;
+        shipsLengthBudget -= newShip.length;
       }
     }
   }
@@ -49,49 +52,52 @@ class GameBoard {
 
   checkShipOverlaps(ship) {
     for (let l = 0; l < this.ships.length; l++) {
-      if (checkOverlap(ship, this.ships[l])) return True;
+      if (this.checkOverlap(ship, this.ships[l])) return true;
     }
 
     return false;
   }
 
   checkOverlap(ship, controlShip) {
-    const subject = [ship.position, ship.getEndPoint()];
-    const control = [controlShip.position, controlShip.getEndPoint()];
+    const subject = [ship.position, ship.getEndPoints()];
+    const control = [controlShip.position, controlShip.getEndPoints()];
 
     return this.checkIntersect(subject, control);
   }
 
   checkIntersect(subject, control) {
-    let o1 = this.getOrientation(subject[0], subject[1], control[0]);
-    let o2 = this.getOrientation(subject[0], subject[1], control[1]);
-    let o3 = this.getOrientation(control[0], control[1], subject[0]);
-    let o4 = this.getOrientation(control[0], control[1], subject[1]);
+    let o1 = this.getVectorAlignment(subject[0], subject[1], control[0]);
+    let o2 = this.getVectorAlignment(subject[0], subject[1], control[1]);
+    let o3 = this.getVectorAlignment(control[0], control[1], subject[0]);
+    let o4 = this.getVectorAlignment(control[0], control[1], subject[1]);
 
     if (o1 !== o2 && o3 !== o4) return true;
 
-    if (o1 === 0 && this.checkOnSegment(subject[0], control[0], subject[1]))
+    if (o1 === 0 && this.IsPointAlignedTo(subject[0], control[0], subject[1]))
       return true;
-    if (o2 === 0 && this.checkOnSegment(subject[0], control[1], subject[1]))
+    if (o2 === 0 && this.IsPointAlignedTo(subject[0], control[1], subject[1]))
       return true;
-    if (o3 === 0 && this.checkOnSegment(control[0], subject[0], control[1]))
+    if (o3 === 0 && this.IsPointAlignedTo(control[0], subject[0], control[1]))
       return true;
-    if (o4 === 0 && this.checkOnSegment(control[0], subject[1], control[1]))
+    if (o4 === 0 && this.IsPointAlignedTo(control[0], subject[1], control[1]))
       return true;
 
     return false;
   }
 
-  getOrientation(start, end, control) {
+  getVectorAlignment(start, end, control) {
     let orientation =
       (end.y - start.y) * (control.x - end.x) -
       (end.x - start.x) * (control.y - end.y);
 
+    // Collinear
     if (orientation === 0) return 0;
+
+    // Clockwise/Counterclockwise
     return orientation > 0 ? 1 : 2;
   }
 
-  checkOnSegment(start, end, control) {
+  IsPointAlignedTo(start, end, control) {
     return (
       end.x <= Math.max(start.x, control.x) &&
       end.x >= Math.min(start.x, control.x) &&
@@ -100,23 +106,50 @@ class GameBoard {
     );
   }
 
+  IsPointAlignedScalar(start, end, control) {
+    subjectLength = { x: end.x - start.x, y: end.y - start.y };
+    controlLength = { x: control.x - start.x, y: control.y - start.y };
+
+    const pointDP =
+      subjectLength.x * controlLength.x + subjectLength.y * controlLength.y;
+    if (pointDP < 0) return false;
+
+    const controlDP =
+      controlLength.x * controlLength.x + controlLength.y * controlLength.y;
+
+    return pointDP < controlDP;
+  }
+
   receiveAttack(x, y) {
-    ships.forEach((ship) => {
-      if (
-        (ship.position.x <= x && ship.position.direction.x * ship.length) ||
-        (ship.position.y <= y && ship.position.direction.y * ship.length)
-      ) {
-        ship.attacked();
-        attacked.push({ x, y });
-        return;
-      } else {
-        missed.push({ x, y });
+    for (let l = 0; l < this.ships.length; l++) {
+      const ship = this.ships[l];
+
+      if (ship.length <= 1 && ship.position.x === x && ship.position.y === y) {
+        ship.hit();
+        break;
       }
-    });
+
+      if (
+        this.getVectorAlignment(
+          ship.position,
+          { x, y },
+          ship.getEndPoints(),
+        ) !== 0
+      )
+        continue;
+
+      if (
+        !this.IsPointAlignedScalar(ship.position, { x, y }, ship.getEndPoints())
+      )
+        continue;
+
+      ship.hit();
+      break;
+    }
   }
 
   areAllShipsSunken() {
-    return ships.every((ship) => ship.isSunken());
+    return this.ships.every((ship) => ship.isSunk());
   }
 }
 

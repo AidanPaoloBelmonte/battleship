@@ -10,7 +10,7 @@ class Ship {
     this.direction = direction;
   }
 
-  getEndPoint() {
+  getEndPoints() {
     return {
       x: this.position.x + this.direction.x * (this.length - 1),
       y: this.position.y + this.direction.y * (this.length - 1),

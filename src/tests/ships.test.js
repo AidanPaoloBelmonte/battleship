@@ -16,14 +16,14 @@ test("End Point Calculation I", () => {
   const expectation = { x: 7, y: 3 };
   const test = new Ship(5, 3, 3, { x: 1, y: 0 });
 
-  expect(test.getEndPoint()).toMatchObject(expectation);
+  expect(test.getEndPoints()).toMatchObject(expectation);
 });
 
 test("End Point Calculation II", () => {
   const expectation = { x: 5, y: 1 };
   const test = new Ship(5, 5, 5, { x: 0, y: -1 });
 
-  expect(test.getEndPoint()).toMatchObject(expectation);
+  expect(test.getEndPoints()).toMatchObject(expectation);
 });
 
 test("Hit", () => {
