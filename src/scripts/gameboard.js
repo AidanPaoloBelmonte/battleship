@@ -144,8 +144,11 @@ class GameBoard {
         continue;
 
       ship.hit();
-      break;
+      this.attacked.push({ x, y });
+      return;
     }
+
+    this.missed.push({ x, y });
   }
 
   areAllShipsSunken() {
