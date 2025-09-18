@@ -145,10 +145,23 @@ class GameBoard {
 
       ship.hit();
       this.attacked.push({ x, y });
-      return;
+      return true;
     }
 
     this.missed.push({ x, y });
+    return false;
+  }
+
+  isMoveAvailable(x, y) {
+    if (x < 0 || y < 0 || x > 9 || y > 9) return false;
+
+    const taken = [...this.attacked, ...this.missed];
+
+    for (let l = 0; l < taken.length; l++) {
+      if (taken[l].x === x && taken[l].y === y) return false;
+    }
+
+    return true;
   }
 
   areAllShipsSunken() {
