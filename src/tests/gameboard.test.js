@@ -98,3 +98,17 @@ test("Ship Status Detection II", () => {
 
   expect(gameboard.areAllShipsSunken()).toBe(true);
 });
+
+test("Cell Availability I", () => {
+  const gameboard = new GameBoard();
+  gameboard.missed.push({ x: 1, y: 5 });
+
+  expect(gameboard.isMoveAvailable(1, 5)).toBe(false);
+});
+
+test("Cell Availability II", () => {
+  const gameboard = new GameBoard();
+  gameboard.missed.push({ x: 3, y: 5 });
+
+  expect(gameboard.isMoveAvailable(1, 5)).toBe(true);
+});
