@@ -1,3 +1,5 @@
+import GameBoard from "./gameboard";
+
 class Player {
   gameboard = null;
 
@@ -80,7 +82,7 @@ class Computer extends Player {
 
     if (Math.floor(index / 3) === 1) {
       newMove.x = move.x + 1;
-    } else if (Mathh.floor(index / 3) >= 2) {
+    } else if (Math.floor(index / 3) >= 2) {
       newMove.x = move.x - 1;
     }
 

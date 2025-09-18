@@ -2,7 +2,7 @@ import Ship from "./ship";
 
 const board_size = 9;
 
-class GameBoard {
+export class GameBoard {
   ships = [];
   missed = [];
   attacked = [];
