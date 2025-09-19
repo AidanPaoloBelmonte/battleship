@@ -12,17 +12,24 @@ export class GameBoard {
     if (customLengthBudget <= 0)
       shipsLengthBudget = Math.floor(Math.random() * 10) + 24;
 
-    let callCount = 0;
+    let calls = 0;
+    let shipCount = 0;
     while (shipsLengthBudget > 0) {
+      if (calls > 100) break;
+
       let newShip = this.generateShip(shipsLengthBudget);
-      if (!this.checkShipOverlaps(newShip)) {
+      if (newShip.length > 0 && !this.checkShipOverlaps(newShip)) {
         this.ships.push(newShip);
         shipsLengthBudget -= newShip.length;
+
+        shipCount++;
       }
+
+      calls++;
     }
   }
 
-  generateShip(length_budget) {
+  generateShip(lengthBudget) {
     const position = {
       x: Math.ceil(Math.random() * 9),
       y: Math.ceil(Math.random() * 9),
@@ -42,15 +49,40 @@ export class GameBoard {
     }
 
     const lengthMaxRange = modifier > 0 ? 9 - basePos : basePos;
-    const length = Math.min(
-      length_budget,
-      Math.ceil(Math.random() * lengthMaxRange),
+    if (lengthMaxRange <= 0) return -1;
+
+    const length = Math.max(
+      this.randomWeighted(Math.min(lengthBudget, lengthMaxRange)),
+      1,
     );
 
     return new Ship(length, position.x, position.y, direction);
   }
 
+  randomWeighted(max) {
+    const baseWeights = [1, 1, 1, 3, 10, 30, 15, 15, 12];
+    const weights = [];
+
+    for (let l = 1; l < Math.min(baseWeights.length, max); l++) {
+      weights.push(baseWeights[l] + baseWeights[l - 1]);
+    }
+
+    let rand = Math.random() * weights[weights.length - 1];
+
+    let index = -1;
+    for (let l = 0; l < weights.length; l++) {
+      if (weights[l] > rand) {
+        index = l;
+        break;
+      }
+    }
+
+    return index;
+  }
+
   checkShipOverlaps(ship) {
+    if (this.ships.length <= 0) return false;
+
     for (let l = 0; l < this.ships.length; l++) {
       if (this.checkOverlap(ship, this.ships[l])) return true;
     }

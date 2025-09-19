@@ -3,7 +3,6 @@ const GameBoard = require("../scripts/gameboard");
 
 test("Construction", () => {
   const gameBoard = new GameBoard();
-
   expect(gameBoard.ships.length).toBeGreaterThan(2);
 });
 
