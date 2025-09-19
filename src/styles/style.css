@@ -5,4 +5,25 @@
 body {
     padding: 0px;
     margin: 0px;
+
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+}
+
+.player {
+    flex-grow: 3;
+    flex-shrink: 1;
+    flex-basis: auto;
+
+    transition: flex-grow 400ms ease-in-out;
+}
+
+.player.focus-field {
+    flex-grow: 1;
+}
+
+#separator {
+    border-left: 3px solid gainsboro;
 }

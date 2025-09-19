@@ -10,7 +10,7 @@ export class GameBoard {
   constructor(customLengthBudget = 0) {
     let shipsLengthBudget = customLengthBudget;
     if (customLengthBudget <= 0)
-      shipsLengthBudget = Math.floor(Math.random() * 10) + 24;
+      shipsLengthBudget = Math.floor(Math.random() * 10) + 12;
 
     let calls = 0;
     let shipCount = 0;
