@@ -68,3 +68,11 @@ body {
 
     transition: scale 50ms ease-in;
 }
+
+.cell.miss {
+    background-color: slateblue;
+}
+
+.cell.hit {
+    background-color: palevioletred;
+}

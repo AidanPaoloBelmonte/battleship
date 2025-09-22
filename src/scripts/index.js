@@ -1,9 +1,14 @@
 import "../styles/style.css";
 
+import { Player, Computer } from "./player";
+
 const p1Field = document.querySelector("#p1");
 const p2Field = document.querySelector("#p2");
 
-function generateBoard(field) {
+const p1Manager = new Player();
+const p2Manager = new Player();
+
+function generateBoard(field, player) {
   const board = field.querySelector(".board");
 
   if (!board) return;
@@ -16,10 +21,10 @@ function generateBoard(field) {
     board.appendChild(cell);
   }
 
-  board.addEventListener("click", (e) => attack(e));
+  board.addEventListener("click", (e) => attack(e, player));
 }
 
-function attack(e) {
+function attack(e, player) {
   if (!e.target.classList.contains("active")) return;
 
   const cell = e.target;
@@ -27,12 +32,15 @@ function attack(e) {
 
   const y = Math.floor(index / 9);
   const x = index - y * 9;
-  console.log(x, y);
+
+  const hit = player.gameboard.receiveAttack(x, y);
 
   cell.classList.remove("active");
+  if (hit) cell.classList.add("hit");
+  else cell.classList.add("miss");
 }
 
 window.onload = () => {
-  generateBoard(p1Field);
-  generateBoard(p2Field);
+  generateBoard(p1Field, p1Manager);
+  generateBoard(p2Field, p2Manager);
 };

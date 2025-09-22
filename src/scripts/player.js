@@ -1,4 +1,4 @@
-import GameBoard from "./gameboard";
+const GameBoard = require("./gameboard");
 
 class Player {
   gameboard = null;

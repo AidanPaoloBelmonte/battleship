@@ -1,8 +1,8 @@
-import Ship from "./ship";
+const Ship = require("./ship");
 
 const board_size = 9;
 
-export class GameBoard {
+class GameBoard {
   ships = [];
   missed = [];
   attacked = [];
@@ -139,8 +139,8 @@ export class GameBoard {
   }
 
   IsPointAlignedScalar(start, end, control) {
-    subjectLength = { x: end.x - start.x, y: end.y - start.y };
-    controlLength = { x: control.x - start.x, y: control.y - start.y };
+    let subjectLength = { x: end.x - start.x, y: end.y - start.y };
+    let controlLength = { x: control.x - start.x, y: control.y - start.y };
 
     const pointDP =
       subjectLength.x * controlLength.x + subjectLength.y * controlLength.y;
