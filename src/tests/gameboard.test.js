@@ -83,6 +83,17 @@ test("Hit Detection IV", () => {
   expect(gameboard.ships[0].hits).toBe(1);
 });
 
+test("Hit Detection V", () => {
+  const gameboard = new GameBoard();
+  gameboard.ships = [];
+
+  const testShip = new Ship(1, 6, 6, { x: 1, y: 0 });
+  gameboard.ships.push(testShip);
+
+  gameboard.receiveAttack(6, 6);
+  expect(gameboard.ships[0].hits).toBe(1);
+});
+
 test("Ship Status Detection I", () => {
   const gameboard = new GameBoard();
   gameboard.ships = [];

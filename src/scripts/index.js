@@ -32,7 +32,6 @@ function attack(e, player) {
 
   const y = Math.floor(index / 9);
   const x = index - y * 9;
-
   const hit = player.gameboard.receiveAttack(x, y);
 
   cell.classList.remove("active");

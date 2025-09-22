@@ -158,7 +158,8 @@ class GameBoard {
 
       if (ship.length <= 1 && ship.position.x === x && ship.position.y === y) {
         ship.hit();
-        break;
+        this.attacked.push({ x, y });
+        return true;
       }
 
       if (
