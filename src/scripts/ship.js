@@ -12,8 +12,8 @@ class Ship {
 
   getEndPoints() {
     return {
-      x: this.position.x + this.direction.x * (this.length - 1),
-      y: this.position.y + this.direction.y * (this.length - 1),
+      x: this.position.x + this.direction.x * this.length,
+      y: this.position.y + this.direction.y * this.length,
     };
   }
 
