@@ -23,7 +23,12 @@ function attack(e) {
   if (!e.target.classList.contains("active")) return;
 
   const cell = e.target;
-  console.log(cell);
+  const index = Array.from(cell.parentNode.children).indexOf(cell);
+
+  const y = Math.floor(index / 9);
+  const x = index - y * 9;
+  console.log(x, y);
+
   cell.classList.remove("active");
 }
 
