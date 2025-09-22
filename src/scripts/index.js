@@ -15,6 +15,16 @@ function generateBoard(field) {
 
     board.appendChild(cell);
   }
+
+  board.addEventListener("click", (e) => attack(e));
+}
+
+function attack(e) {
+  if (!e.target.classList.contains("active")) return;
+
+  const cell = e.target;
+  console.log(cell);
+  cell.classList.remove("active");
 }
 
 window.onload = () => {

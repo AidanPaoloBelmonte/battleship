@@ -15,7 +15,7 @@ body {
 .player {
     padding: 25px;
 
-    flex-grow: 3;
+    flex-grow: 1;
     flex-shrink: 1;
     flex-basis: auto;
 
@@ -24,10 +24,14 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    pointer-events: none;
 }
 
 .player.focus-field {
-    flex-grow: 1;
+    flex-grow: 3;
+
+    pointer-events: auto;
 }
 
 #separator {
@@ -36,6 +40,8 @@ body {
 
 .board {
     width: 75%;
+    max-width: 75vh;
+    max-height: 75vh;
     aspect-ratio: 1 / 1;
 
     border: 1px solid slategray;
