@@ -31,8 +31,8 @@ class GameBoard {
 
   generateShip(lengthBudget) {
     const position = {
-      x: Math.ceil(Math.random() * 9),
-      y: Math.ceil(Math.random() * 9),
+      x: Math.floor(Math.random() * 8),
+      y: Math.floor(Math.random() * 8),
     };
 
     const direction = { x: 0, y: 0 };

@@ -5,6 +5,13 @@ class Player {
 
   constructor() {
     this.gameboard = new GameBoard();
+
+    for (let l = 0; l < this.gameboard.ships.length; l++) {
+      console.log(
+        this.gameboard.ships[l].position,
+        this.gameboard.ships[l].length,
+      );
+    }
   }
 }
 
