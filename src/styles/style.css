@@ -13,11 +13,17 @@ body {
 }
 
 .player {
+    padding: 25px;
+
     flex-grow: 3;
     flex-shrink: 1;
     flex-basis: auto;
 
     transition: flex-grow 400ms ease-in-out;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .player.focus-field {
@@ -26,4 +32,33 @@ body {
 
 #separator {
     border-left: 3px solid gainsboro;
+}
+
+.board {
+    width: 75%;
+    aspect-ratio: 1 / 1;
+
+    border: 1px solid slategray;
+
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    grid-auto-columns: 1fr;
+    grid-auto-rows: 1fr;
+}
+
+.cell {
+    border: 1px solid gainsboro;
+    background-color: white;
+}
+
+.cell.active:hover {
+    display: fixed;
+    scale: 1.2;
+}
+
+.cell.active:active {
+    scale: 0.9;
+
+    transition: scale 50ms ease-in;
 }
