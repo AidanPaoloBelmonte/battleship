@@ -6,7 +6,7 @@ const p1Field = document.querySelector("#p1");
 const p2Field = document.querySelector("#p2");
 
 const p1Manager = new Player();
-const p2Manager = new Player();
+const p2Manager = new Computer();
 
 let current_player = 1;
 
@@ -36,11 +36,15 @@ function attack(e, player) {
   const x = index - y * 9;
   const hit = player.gameboard.receiveAttack(x, y);
 
+  updateCell(cell, hit);
+
+  changeTurn();
+}
+
+function updateCell(cell, hit) {
   cell.classList.remove("active");
   if (hit) cell.classList.add("hit");
   else cell.classList.add("miss");
-
-  changeTurn();
 }
 
 function changeTurn() {

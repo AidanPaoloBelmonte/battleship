@@ -17,63 +17,85 @@ class Computer extends Player {
   constructor() {
     super();
 
+    this.gameboard = new GameBoard();
     this.lastSuccessfulHitPosition = null;
   }
 
   makeMove() {
-    if (!this.lastSuccessfulHitPosition) this.conqueringMove();
-    else randomMove();
+    let move = { x: 0, y: 0 };
+
+    if (this.lastSuccessfulHitPosition) move = this.conqueringMove();
+    else move = this.randomMove();
+
+    let hit = this.gameboard.receiveAttack(move);
+
+    if (this.lastSuccessfulHitPosition) {
+      if (hit) this.resetConquerState(move);
+      else this.rollGiveUpConquerChase();
+    } else if (hit) this.resetConquerState(move);
+
+    return {
+      x: move.x,
+      y: move.y,
+      hit: hit,
+    };
   }
 
   randomMove() {
     let move = {
-      x: Math.ceil(Math.random() * 9),
-      y: Math.ceil(Math.random() * 9),
+      x: Math.ceil(Math.random() * 8),
+      y: Math.ceil(Math.random() * 8),
     };
-    while (this.gameboard.isMoveAvailable(move.x, move.y))
+
+    let count = 0;
+    while (!this.gameboard.isMoveAvailable(move.x, move.y)) {
       move = {
-        x: Math.ceil(Math.random() * 9),
-        y: Math.ceil(Math.random() * 9),
+        x: Math.ceil(Math.random() * 8),
+        y: Math.ceil(Math.random() * 8),
       };
 
-    if (gameboard.receiveAttack(move.x, move.y)) {
-      this.lastSuccessfulHitPosition = move;
+      count++;
+
+      if (count > 100) {
+        console.error("Took too long to decide a move!");
+        return 0;
+      }
     }
+
+    return move;
   }
 
   conqueringMove() {
-    let move = this.lastSuccessfulHitPosition();
+    let move = this.lastSuccessfulHitPosition;
 
-    count = this.conquerChaseAttempts;
+    let count = this.conquerChaseAttempts;
     while (this.gameboard.isMoveAvailable(move.x, move.y)) {
       move = this.exploreAround(this.lastSuccessfulHitPosition, count);
 
       count++;
       if (count > 8) {
-        this.conquerChaseAttempts = 0;
-        this.conquerChaseCount = 0;
-        this.lastSuccessfulHitPosition = null;
-
-        this.randomMove();
+        this.resetConquerState();
+        return this.randomMove();
       }
     }
 
-    let giveUpConquerChance = 0;
+    return move;
+  }
 
-    if (this.gameboard.receiveAttack(move.x, move.y)) {
-      this.conquerChaseAttempts = 0;
-      this.conquerChaseCount = 0;
-      this.lastSuccessfulHitPosition = move;
-      return;
-    }
+  resetConquerState(newPosition = null) {
+    this.conquerChaseAttempts = 0;
+    this.conquerChaseCount = 0;
+    this.lastSuccessfulHitPosition = newPosition;
+  }
 
-    if (this.conquerChaseCount > 0)
-      giveUpConquerChance =
-        10 + ((this.conquerChaseCount * (this.conquerChaseCount + 1)) / 2) * 5;
-    if (giveUpConquerChance < Math.random()) {
-      this.conquerChaseAttempts = 0;
-      this.conquerChaseCount = 0;
-      this.lastSuccessfulHitPosition = null;
+  rollGiveUpConquerChase() {
+    if (this.conquerChaseAttempts <= 0) return;
+    giveUpConquerChance =
+      10 +
+      ((this.conquerChaseAttempts * (this.conquerChaseAttempts + 1)) / 2) * 5;
+
+    if (giveUpConquerChance < Math.random() * 100) {
+      this.resetConquerState();
     }
   }
 
