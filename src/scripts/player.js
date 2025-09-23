@@ -27,7 +27,7 @@ class Computer extends Player {
     if (this.lastSuccessfulHitPosition) move = this.conqueringMove();
     else move = this.randomMove();
 
-    let hit = this.gameboard.receiveAttack(move);
+    let hit = this.gameboard.receiveAttack(move.x, move.y);
 
     if (this.lastSuccessfulHitPosition) {
       if (hit) this.resetConquerState(move);

@@ -1,5 +1,6 @@
 import "../styles/style.css";
 
+import { ClassWatcher } from "./watcher";
 import { Player, Computer } from "./player";
 
 const p1Field = document.querySelector("#p1");
@@ -7,6 +8,8 @@ const p2Field = document.querySelector("#p2");
 
 const p1Manager = new Player();
 const p2Manager = new Computer();
+
+let watcher = null;
 
 let current_player = 1;
 
@@ -24,6 +27,10 @@ function generateBoard(field, player) {
   }
 
   board.addEventListener("click", (e) => attack(e, player));
+
+  if (player instanceof Computer)
+    watcher = new ClassWatcher(field, "focus-field", computerTurn);
+  else watcher = null;
 }
 
 function attack(e, player) {
@@ -37,14 +44,19 @@ function attack(e, player) {
   const hit = player.gameboard.receiveAttack(x, y);
 
   updateCell(cell, hit);
-
   changeTurn();
 }
 
-function updateCell(cell, hit) {
-  cell.classList.remove("active");
-  if (hit) cell.classList.add("hit");
-  else cell.classList.add("miss");
+function computerTurn() {
+  const result = p2Manager.makeMove();
+  console.log(result);
+  const index = result.y * 9 + result.x;
+
+  const board = p2Field.querySelector(".board");
+  const cell = board.children[index];
+
+  updateCell(cell, result.hit);
+  changeTurn();
 }
 
 function changeTurn() {
@@ -52,6 +64,12 @@ function changeTurn() {
 
   p1Field.classList.toggle("focus-field");
   p2Field.classList.toggle("focus-field");
+}
+
+function updateCell(cell, hit) {
+  cell.classList.remove("active");
+  if (hit) cell.classList.add("hit");
+  else cell.classList.add("miss");
 }
 
 window.onload = () => {
