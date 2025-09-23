@@ -19,6 +19,8 @@ class Computer extends Player {
 
     this.gameboard = new GameBoard();
     this.lastSuccessfulHitPosition = null;
+    this.conquerChaseAttempts = 0;
+    this.conquerChaseCount = 0;
   }
 
   makeMove() {
@@ -50,8 +52,8 @@ class Computer extends Player {
     let count = 0;
     while (!this.gameboard.isMoveAvailable(move.x, move.y)) {
       move = {
-        x: Math.ceil(Math.random() * 8),
-        y: Math.ceil(Math.random() * 8),
+        x: Math.ceil(Math.random() * 9) - 1,
+        y: Math.ceil(Math.random() * 9) - 1,
       };
 
       count++;
@@ -68,17 +70,19 @@ class Computer extends Player {
   conqueringMove() {
     let move = this.lastSuccessfulHitPosition;
 
-    let count = this.conquerChaseAttempts;
-    while (this.gameboard.isMoveAvailable(move.x, move.y)) {
+    let count = this.conquerChaseCount;
+    while (!this.gameboard.isMoveAvailable(move.x, move.y)) {
+      console.log(count);
       move = this.exploreAround(this.lastSuccessfulHitPosition, count);
 
       count++;
-      if (count > 8) {
+      if (count > 3) {
         this.resetConquerState();
         return this.randomMove();
       }
     }
 
+    this.conquerChaseCount = count;
     return move;
   }
 
@@ -92,7 +96,7 @@ class Computer extends Player {
     if (this.conquerChaseAttempts <= 0) return;
     giveUpConquerChance =
       10 +
-      ((this.conquerChaseAttempts * (this.conquerChaseAttempts + 1)) / 2) * 5;
+      ((this.conquerChaseAttempts * (this.conquerChaseAttempts + 1)) / 2) * 7;
 
     if (giveUpConquerChance < Math.random() * 100) {
       this.resetConquerState();
@@ -100,21 +104,12 @@ class Computer extends Player {
   }
 
   exploreAround(move, index) {
-    const newMove = { x: move.x, y: move.y };
+    if (index == 0) return { x: move.x + 1, y: move.y };
+    else if (index == 1) return { x: move.x - 1, y: move.y };
+    else if (index == 2) return { x: move.x, y: move.y + 1 };
+    else if (index == 3) return { x: move.x, y: move.y - 1 };
 
-    if (Math.floor(index / 3) === 1) {
-      newMove.x = move.x + 1;
-    } else if (Math.floor(index / 3) >= 2) {
-      newMove.x = move.x - 1;
-    }
-
-    if (index % 3 === 1) {
-      newMove.y = move.y + 1;
-    } else if (index % 3 >= 2) {
-      newMove.y = move.y - 1;
-    }
-
-    return newMove;
+    return null;
   }
 }
 
