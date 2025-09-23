@@ -19,13 +19,13 @@ body {
     flex-shrink: 1;
     flex-basis: auto;
 
-    transition: flex-grow 400ms ease-in-out;
+    transition: flex-grow 300ms ease-in-out;
 
     display: flex;
     justify-content: center;
     align-items: center;
 
-    /*pointer-events: none;*/
+    pointer-events: none;
 }
 
 .player.focus-field {

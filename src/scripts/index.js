@@ -8,6 +8,8 @@ const p2Field = document.querySelector("#p2");
 const p1Manager = new Player();
 const p2Manager = new Player();
 
+let current_player = 1;
+
 function generateBoard(field, player) {
   const board = field.querySelector(".board");
 
@@ -37,9 +39,20 @@ function attack(e, player) {
   cell.classList.remove("active");
   if (hit) cell.classList.add("hit");
   else cell.classList.add("miss");
+
+  changeTurn();
+}
+
+function changeTurn() {
+  current_player = (current_player + 1) % 2;
+
+  p1Field.classList.toggle("focus-field");
+  p2Field.classList.toggle("focus-field");
 }
 
 window.onload = () => {
   generateBoard(p1Field, p1Manager);
   generateBoard(p2Field, p2Manager);
+
+  p1Field.classList.add("focus-field");
 };
