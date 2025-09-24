@@ -4,10 +4,21 @@ const board_size = 9;
 
 class GameBoard {
   ships = [];
-  missed = [];
-  attacked = [];
+  freeCells = [];
+  hitCells = [];
 
   constructor(customLengthBudget = 0) {
+    this.ships = [];
+    this.freeCells = [];
+    this.hitCells = [];
+
+    this.init(customLengthBudget);
+  }
+
+  init(customLengthBudget = 0) {
+    for (let l = 0; l < board_size * board_size - 1; l++)
+      this.freeCells.push(l);
+
     let shipsLengthBudget = customLengthBudget;
     if (customLengthBudget <= 0)
       shipsLengthBudget = Math.floor(Math.random() * 10) + 12;
@@ -158,7 +169,7 @@ class GameBoard {
 
       if (ship.length <= 1 && ship.position.x === x && ship.position.y === y) {
         ship.hit();
-        this.attacked.push({ x, y });
+        this.recordAttack(x, y);
         return true;
       }
 
@@ -177,24 +188,28 @@ class GameBoard {
         continue;
 
       ship.hit();
-      this.attacked.push({ x, y });
+      this.recordAttack(x, y);
       return true;
     }
 
-    this.missed.push({ x, y });
+    this.recordAttack(x, y);
     return false;
+  }
+
+  recordAttack(x, y) {
+    index = this.positionToIndex(x, y);
+    this.freeCells.splice(this.freeCells.indexOf(index), 1);
+  }
+
+  positionToIndex(x, y) {
+    return y * 9 + x;
   }
 
   isMoveAvailable(x, y) {
     if (x < 0 || y < 0 || x > 9 || y > 9) return false;
 
-    const taken = [...this.attacked, ...this.missed];
-
-    for (let l = 0; l < taken.length; l++) {
-      if (taken[l].x === x && taken[l].y === y) return false;
-    }
-
-    return true;
+    index = this.positionToIndex(x, y);
+    return this.freeCells.includes(index);
   }
 
   areAllShipsSunken() {

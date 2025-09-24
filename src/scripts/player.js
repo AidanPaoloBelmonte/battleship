@@ -11,6 +11,7 @@ class Player {
 class Computer extends Player {
   gameboard = null;
   lastSuccessfulHitPosition = null;
+  lastSuccessfulHitDirection = null;
   conquerChaseAttempts = 0;
   conquerChaseCount = 0;
 
@@ -44,10 +45,7 @@ class Computer extends Player {
   }
 
   randomMove() {
-    let move = {
-      x: Math.ceil(Math.random() * 8),
-      y: Math.ceil(Math.random() * 8),
-    };
+    index = Math.random() * 81 - 1;
 
     let count = 0;
     while (!this.gameboard.isMoveAvailable(move.x, move.y)) {

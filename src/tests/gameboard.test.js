@@ -123,14 +123,14 @@ test("Ship Status Detection II", () => {
 
 test("Cell Availability I", () => {
   const gameboard = new GameBoard();
-  gameboard.missed.push({ x: 1, y: 5 });
+  gameboard.receiveAttack(1, 5);
 
   expect(gameboard.isMoveAvailable(1, 5)).toBe(false);
 });
 
 test("Cell Availability II", () => {
   const gameboard = new GameBoard();
-  gameboard.missed.push({ x: 3, y: 5 });
+  gameboard.receiveAttack(3, 5);
 
   expect(gameboard.isMoveAvailable(1, 5)).toBe(true);
 });
