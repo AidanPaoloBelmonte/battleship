@@ -49,8 +49,7 @@ function attack(e, player) {
 
 function computerTurn() {
   const result = p2Manager.makeMove();
-  console.log(result);
-  const index = result.y * 9 + result.x;
+  const index = result.index;
 
   const board = p2Field.querySelector(".board");
   const cell = board.children[index];

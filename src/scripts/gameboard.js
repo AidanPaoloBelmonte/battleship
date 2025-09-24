@@ -5,19 +5,16 @@ const board_size = 9;
 class GameBoard {
   ships = [];
   freeCells = [];
-  hitCells = [];
 
   constructor(customLengthBudget = 0) {
     this.ships = [];
     this.freeCells = [];
-    this.hitCells = [];
 
     this.init(customLengthBudget);
   }
 
   init(customLengthBudget = 0) {
-    for (let l = 0; l < board_size * board_size - 1; l++)
-      this.freeCells.push(l);
+    for (let l = 0; l < board_size * board_size; l++) this.freeCells.push(l);
 
     let shipsLengthBudget = customLengthBudget;
     if (customLengthBudget <= 0)
@@ -163,6 +160,14 @@ class GameBoard {
     return pointDP < controlDP;
   }
 
+  getRandomFreePosition() {
+    if (!this.freeCells) return null;
+
+    const index =
+      this.freeCells[Math.ceil(Math.random() * this.freeCells.length) - 1];
+    return this.indexToPosition(index);
+  }
+
   receiveAttack(x, y) {
     for (let l = 0; l < this.ships.length; l++) {
       const ship = this.ships[l];
@@ -197,18 +202,25 @@ class GameBoard {
   }
 
   recordAttack(x, y) {
-    index = this.positionToIndex(x, y);
+    let index = this.positionToIndex(x, y);
     this.freeCells.splice(this.freeCells.indexOf(index), 1);
   }
 
   positionToIndex(x, y) {
-    return y * 9 + x;
+    return y * board_size + x;
+  }
+
+  indexToPosition(index) {
+    const y = Math.floor(index / board_size);
+    const x = index - y * board_size;
+
+    return { x, y };
   }
 
   isMoveAvailable(x, y) {
-    if (x < 0 || y < 0 || x > 9 || y > 9) return false;
+    if (x < 0 || y < 0 || x > board_size || y > board_size) return false;
 
-    index = this.positionToIndex(x, y);
+    let index = this.positionToIndex(x, y);
     return this.freeCells.includes(index);
   }
 

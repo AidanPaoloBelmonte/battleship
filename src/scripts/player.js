@@ -38,28 +38,17 @@ class Computer extends Player {
     } else if (hit) this.resetConquerState(move);
 
     return {
-      x: move.x,
-      y: move.y,
+      index: this.gameboard.positionToIndex(move.x, move.y),
       hit: hit,
     };
   }
 
   randomMove() {
-    index = Math.random() * 81 - 1;
+    const move = this.gameboard.getRandomFreePosition();
 
-    let count = 0;
-    while (!this.gameboard.isMoveAvailable(move.x, move.y)) {
-      move = {
-        x: Math.ceil(Math.random() * 9) - 1,
-        y: Math.ceil(Math.random() * 9) - 1,
-      };
-
-      count++;
-
-      if (count > 100) {
-        console.error("Took too long to decide a move!");
-        return 0;
-      }
+    if (!move) {
+      console.error("No more free moves are available!");
+      return { x: 0, y: 0 };
     }
 
     return move;
@@ -70,7 +59,6 @@ class Computer extends Player {
 
     let count = this.conquerChaseCount;
     while (!this.gameboard.isMoveAvailable(move.x, move.y)) {
-      console.log(count);
       move = this.exploreAround(this.lastSuccessfulHitPosition, count);
 
       count++;
