@@ -17,7 +17,7 @@
 
     <dialog id="main-menu">
         <h1>Welcome to Battleship</h1>
-        <div id="player-setup">
+        <div id="player-setup" class="dialog-container">
             <div id="vs-com" class="menu-button">
                 <img />
                 VS Computer
@@ -26,6 +26,21 @@
             <div id="vs-player" class="menu-button">
                 <img height="64px" />
                 VS Player
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="end-game">
+        <h1>You Win!</h1>
+        <div id="results-options" class="dialog-container">
+            <div id="replay" class="menu-button">
+                <img />
+                Replay
+            </div>
+            <div class="separator" height="64px"></div>
+            <div id="to-title" class="menu-button">
+                <img />
+                Start Over
             </div>
         </div>
     </dialog>

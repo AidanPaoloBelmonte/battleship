@@ -4,6 +4,7 @@ import { ClassWatcher } from "./watcher";
 import { Player, Computer } from "./player";
 
 const menu = document.querySelector("#main-menu");
+const results = document.querySelector("#end-game");
 
 const p1Field = document.querySelector("#p1");
 const p2Field = document.querySelector("#p2");
@@ -13,7 +14,7 @@ let p2Manager = new Computer();
 
 let watcher = null;
 
-let current_player = 1;
+let current_player = 0;
 
 function startComputerGame() {
   p1Manager = new Player();
@@ -66,7 +67,8 @@ function attack(e, player) {
   const hit = player.gameboard.receiveAttack(x, y);
 
   updateCell(cell, hit);
-  changeTurn();
+  if (!player.gameboard.areAllShipsSunken()) changeTurn();
+  else endGame();
 }
 
 function computerTurn() {
@@ -77,7 +79,8 @@ function computerTurn() {
   const cell = board.children[index];
 
   updateCell(cell, result.hit);
-  changeTurn();
+  if (!p2Manager.gameboard.areAllShipsSunken()) changeTurn();
+  else endGame();
 }
 
 function changeTurn() {
@@ -93,12 +96,29 @@ function updateCell(cell, hit) {
   else cell.classList.add("miss");
 }
 
+function endGame() {
+  let declaration = "Tie?";
+  if (current_player) {
+    p2Field.classList.remove("focus-field");
+    p2Field.classList.add("lost");
+
+    declaration = "You Won!";
+  } else {
+    p1Field.classList.remove("focus-field");
+    p1Field.classList.add("lost");
+
+    declaration = "You Lost!";
+  }
+  results.querySelector("h1").textContent = declaration;
+
+  results.showModal();
+}
+
 window.onload = () => {
   generateBoard(p1Field.querySelector(".board"));
   generateBoard(p2Field.querySelector(".board"));
 
   menu.showModal();
-  console.log("Wow");
 };
 
 menu.addEventListener("click", (e) => {
