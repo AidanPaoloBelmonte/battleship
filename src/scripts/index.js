@@ -3,6 +3,8 @@ import "../styles/style.css";
 import { ClassWatcher } from "./watcher";
 import { Player, Computer } from "./player";
 
+const menu = document.querySelector("#main-menu");
+
 const p1Field = document.querySelector("#p1");
 const p2Field = document.querySelector("#p2");
 
@@ -72,6 +74,8 @@ function updateCell(cell, hit) {
 }
 
 window.onload = () => {
+  menu.showModal();
+
   generateBoard(p1Field, p1Manager);
   generateBoard(p2Field, p2Manager);
 

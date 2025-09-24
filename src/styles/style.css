@@ -12,6 +12,7 @@ body {
     display: flex;
 }
 
+/*Content*/
 .player {
     padding: 25px;
 
@@ -34,7 +35,7 @@ body {
     pointer-events: auto;
 }
 
-#separator {
+.separator {
     border-left: 3px solid gainsboro;
 }
 
@@ -75,4 +76,78 @@ body {
 
 .cell.hit {
     background-color: palevioletred;
+}
+
+/*Menus*/
+dialog {
+    width: 100vw;
+    height: 100vh;
+
+    padding: 0;
+    border: 0px transparent;
+    margin: 0 auto;
+    outline: none;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: transparent;
+
+    overflow: hidden;
+}
+
+dialog::backdrop {
+    background-color: rgba(230, 230, 230, 0.8);
+}
+
+#player-setup {
+    padding: 32px;
+    border-radius: 16px;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    background-color: whitesmoke;
+
+    user-select: none;
+}
+
+#player-setup > .separator {
+    border-width: 2px;
+}
+
+.menu-button {
+    padding: 16px 32px;
+
+    aspect-ratio: 1 / 1;
+
+    transition: background-color 50ms ease-in;
+    transition: scale 50ms ease-in;
+
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    flex-direction: column;
+}
+
+.menu-button:hover {
+    background-color: gainsboro;
+}
+
+.menu-button:active {
+    scale: 0.9;
+}
+
+#vs-com {
+    content: url(../assets/laptop.svg);
+    width: 128px;
+}
+
+#vs-player {
+    content: url(../assets/account-supervisor.svg);
+    width: 128px;
+    height: 128px;
 }
