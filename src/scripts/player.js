@@ -114,7 +114,7 @@ class Computer extends Player {
     if (this.conquerChaseAttempts <= 0) return;
     giveUpConquerChance =
       10 +
-      ((this.conquerChaseAttempts * (this.conquerChaseAttempts + 1)) / 2) * 7;
+      ((this.conquerChaseAttempts * (this.conquerChaseAttempts + 1)) / 2) * 6;
 
     if (giveUpConquerChance < Math.random() * 100) {
       this.resetConquerState();
