@@ -217,6 +217,19 @@ class GameBoard {
     return { x, y };
   }
 
+  getDirection(start, end) {
+    const vector = {
+      x: end.x - start.x,
+      y: end.y - start.y,
+    };
+
+    const magnitude = Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2));
+    return {
+      x: Math.floor(vector.x / magnitude),
+      y: Math.floor(vector.y / magnitude),
+    };
+  }
+
   isMoveAvailable(x, y) {
     if (x < 0 || y < 0 || x > board_size || y > board_size) return false;
 

@@ -33,8 +33,14 @@ class Computer extends Player {
     let hit = this.gameboard.receiveAttack(move.x, move.y);
 
     if (this.lastSuccessfulHitPosition) {
-      if (hit) this.resetConquerState(move);
-      else this.rollGiveUpConquerChase();
+      if (hit) {
+        const dir = this.gameboard.getDirection(
+          this.lastSuccessfulHitPosition,
+          move,
+        );
+
+        this.resetConquerState(move, dir);
+      } else this.rollGiveUpConquerChase();
     } else if (hit) this.resetConquerState(move);
 
     return {
@@ -55,8 +61,12 @@ class Computer extends Player {
   }
 
   conqueringMove() {
-    let move = this.lastSuccessfulHitPosition;
+    if (!this.lastSuccessfulHitDirection) return this.exploreMove();
+    return this.followMove();
+  }
 
+  exploreMove() {
+    let move = this.lastSuccessfulHitPosition;
     let count = this.conquerChaseCount;
     while (!this.gameboard.isMoveAvailable(move.x, move.y)) {
       move = this.exploreAround(this.lastSuccessfulHitPosition, count);
@@ -72,10 +82,32 @@ class Computer extends Player {
     return move;
   }
 
-  resetConquerState(newPosition = null) {
+  exploreAround(move, index) {
+    if (index == 0) return { x: move.x + 1, y: move.y };
+    else if (index == 1) return { x: move.x - 1, y: move.y };
+    else if (index == 2) return { x: move.x, y: move.y + 1 };
+    else if (index == 3) return { x: move.x, y: move.y - 1 };
+
+    return null;
+  }
+
+  followMove() {
+    let nextMove = {
+      x: this.lastSuccessfulHitPosition.x + this.lastSuccessfulHitDirection.x,
+      y: this.lastSuccessfulHitPosition.y + this.lastSuccessfulHitDirection.y,
+    };
+
+    if (!this.gameboard.isMoveAvailable(nextMove.x, nextMove.y))
+      return this.exploreMove();
+
+    return nextMove;
+  }
+
+  resetConquerState(move = null, dir = null) {
     this.conquerChaseAttempts = 0;
     this.conquerChaseCount = 0;
-    this.lastSuccessfulHitPosition = newPosition;
+    this.lastSuccessfulHitPosition = move;
+    this.lastSuccessfulHitDirection = dir;
   }
 
   rollGiveUpConquerChase() {
@@ -87,15 +119,6 @@ class Computer extends Player {
     if (giveUpConquerChance < Math.random() * 100) {
       this.resetConquerState();
     }
-  }
-
-  exploreAround(move, index) {
-    if (index == 0) return { x: move.x + 1, y: move.y };
-    else if (index == 1) return { x: move.x - 1, y: move.y };
-    else if (index == 2) return { x: move.x, y: move.y + 1 };
-    else if (index == 3) return { x: move.x, y: move.y - 1 };
-
-    return null;
   }
 }
 

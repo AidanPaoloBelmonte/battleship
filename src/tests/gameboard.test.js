@@ -35,6 +35,24 @@ test("Perpendicular Overlap Detection", () => {
   expect(gameboard.checkOverlap(testShip, controlShip)).toBe(true);
 });
 
+test("Normalize Vectors I", () => {
+  const gameboard = new GameBoard(1);
+  const start = { x: 1, y: 1 };
+  const end = { x: 5, y: 1 };
+  const expectation = { x: 1, y: 0 };
+
+  expect(gameboard.getDirection(start, end)).toMatchObject(expectation);
+});
+
+test("Normalize Vectors II", () => {
+  const gameboard = new GameBoard(1);
+  const start = { x: 5, y: 5 };
+  const end = { x: 5, y: 1 };
+  const expectation = { x: 0, y: -1 };
+
+  expect(gameboard.getDirection(start, end)).toMatchObject(expectation);
+});
+
 test("Hit Detection I", () => {
   const gameboard = new GameBoard();
   gameboard.ships = [];
