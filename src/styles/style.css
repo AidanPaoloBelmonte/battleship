@@ -168,3 +168,11 @@ dialog::backdrop {
 #vs-player > img {
     content: url(../assets/account-supervisor.svg);
 }
+
+#replay > img {
+    content: url(../assets/restart.svg);
+}
+
+#to-title > img {
+    content: url(../assets/home.svg);
+}
