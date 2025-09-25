@@ -27,6 +27,19 @@ function startComputerGame() {
   p1Manager = new Player();
   p2Manager = new Computer();
 
+  setupFields();
+}
+
+function startVersusGame() {
+  lastMode = startVersusGame;
+
+  p1Manager = new Player();
+  p2Manager = new Player();
+
+  setupFields();
+}
+
+function setupFields() {
   prepareBoard(p1Field, p1Manager, p1Listener);
   prepareBoard(p2Field, p2Manager, p2Listener);
 
@@ -160,6 +173,9 @@ menu.addEventListener("click", (e) => {
     menu.close();
   } else if (id === "vs-player") {
     openBoardSetupMenu();
+  } else if (id === "random-board") {
+    startVersusGame();
+    menu.close();
   } else if (e.target.classList.contains("previous")) {
     closeBoardSetupMenu();
   }
