@@ -119,15 +119,17 @@ function updateCell(cell, hit) {
 function endGame() {
   let declaration = "Tie?";
   if (currentPlayer) {
-    p2Field.classList.remove("focus-field");
-    p2Field.classList.add("lost");
-
-    declaration = "You Won!";
-  } else {
     p1Field.classList.remove("focus-field");
     p1Field.classList.add("lost");
 
-    declaration = "You Lost!";
+    if (watcher) declaration = "You Lost!";
+    else declaration = "Player 2 Wins!";
+  } else {
+    p2Field.classList.remove("focus-field");
+    p2Field.classList.add("lost");
+
+    if (watcher) declaration = "You Won!";
+    else declaration = "Player 1 Wins!";
   }
   results.querySelector("h1").textContent = declaration;
 
@@ -174,6 +176,7 @@ menu.addEventListener("click", (e) => {
   } else if (id === "vs-player") {
     openBoardSetupMenu();
   } else if (id === "random-board") {
+    closeBoardSetupMenu();
     startVersusGame();
     menu.close();
   } else if (e.target.classList.contains("previous")) {
