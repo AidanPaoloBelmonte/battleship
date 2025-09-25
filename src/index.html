@@ -17,15 +17,33 @@
 
     <dialog id="main-menu">
         <h1>Welcome to Battleship</h1>
-        <div id="player-setup" class="dialog-container">
-            <div id="vs-com" class="menu-button">
-                <img />
-                VS Computer
+        <div class="anchor">
+            <div id="base-menu" class="slide-container">
+                <div id="player-setup" class="dialog-container">
+                    <div id="vs-com" class="menu-button">
+                        <img />
+                        VS Computer
+                    </div>
+                    <div class="separator" height="64px"></div>
+                    <div id="vs-player" class="menu-button">
+                        <img height="64px" />
+                        VS Player
+                    </div>
+                </div>
+                <div id="board-setup" class="dialog-container slide-menu">
+                    <div id="random-board" class="menu-button">
+                        <img />
+                        Random Board
+                    </div>
+                    <div class="separator" height="64px"></div>
+                    <div id="custom-board" class="menu-button">
+                        <img height="64px" />
+                        Custom Board
+                    </div>
+                </div>
             </div>
-            <div class="separator" height="64px"></div>
-            <div id="vs-player" class="menu-button">
-                <img height="64px" />
-                VS Player
+            <div class="floater">
+                <div class="previous menu-button"></div>
             </div>
         </div>
     </dialog>

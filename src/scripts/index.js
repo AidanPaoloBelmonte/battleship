@@ -4,34 +4,41 @@ import { ClassWatcher } from "./watcher";
 import { Player, Computer } from "./player";
 
 const menu = document.querySelector("#main-menu");
+const boardMenu = document.querySelector("#board-setup");
 const results = document.querySelector("#end-game");
+const previous = document.querySelector(".previous");
 
 const p1Field = document.querySelector("#p1");
 const p2Field = document.querySelector("#p2");
 
 let p1Manager = new Player();
 let p2Manager = new Computer();
+let p1Listener = null;
+let p2Listener = null;
 
 let watcher = null;
 
-let current_player = 0;
+let lastMode = null;
+let currentPlayer = 0;
 
 function startComputerGame() {
+  lastMode = startComputerGame;
+
   p1Manager = new Player();
   p2Manager = new Computer();
 
-  prepareBoard(p1Field, p1Manager);
-  prepareBoard(p2Field, p2Manager);
+  prepareBoard(p1Field, p1Manager, p1Listener);
+  prepareBoard(p2Field, p2Manager, p2Listener);
 
-  p1Field.classList.add("focus-field");
+  resetFieldStatus();
 }
 
-function prepareBoard(field, player) {
+function prepareBoard(field, player, listener) {
   const board = field.querySelector(".board");
 
   generateBoard(board);
 
-  board.addEventListener("click", (e) => attack(e, player));
+  p1Listener = (e) => attack(e, player);
 
   if (player instanceof Computer)
     watcher = new ClassWatcher(field, "focus-field", computerTurn);
@@ -84,7 +91,7 @@ function computerTurn() {
 }
 
 function changeTurn() {
-  current_player = (current_player + 1) % 2;
+  currentPlayer = (currentPlayer + 1) % 2;
 
   p1Field.classList.toggle("focus-field");
   p2Field.classList.toggle("focus-field");
@@ -98,7 +105,7 @@ function updateCell(cell, hit) {
 
 function endGame() {
   let declaration = "Tie?";
-  if (current_player) {
+  if (currentPlayer) {
     p2Field.classList.remove("focus-field");
     p2Field.classList.add("lost");
 
@@ -114,9 +121,32 @@ function endGame() {
   results.showModal();
 }
 
+function resetFieldStatus() {
+  p1Field.className = "player";
+  p2Field.className = "player";
+
+  p1Field.classList.add("focus-field");
+}
+
+function openBoardSetupMenu() {
+  boardMenu.classList.add("open");
+  previous.classList.add("appear");
+}
+
+function closeBoardSetupMenu() {
+  boardMenu.classList.remove("open");
+  previous.classList.remove("appear");
+}
+
 window.onload = () => {
-  generateBoard(p1Field.querySelector(".board"));
-  generateBoard(p2Field.querySelector(".board"));
+  const p1Board = p1Field.querySelector(".board");
+  const p2Board = p2Field.querySelector(".board");
+
+  p1Board.addEventListener("click", (e) => attack(e, p1Manager));
+  p2Board.addEventListener("click", (e) => attack(e, p2Manager));
+
+  generateBoard(p1Board);
+  generateBoard(p2Board);
 
   menu.showModal();
 };
@@ -125,9 +155,23 @@ menu.addEventListener("click", (e) => {
   if (!e.target.classList.contains("menu-button")) return;
   const id = e.target.id;
 
-  console.log(id === "vs-com");
   if (id === "vs-com") {
     startComputerGame();
     menu.close();
+  } else if (id === "vs-player") {
+    openBoardSetupMenu();
+  } else if (e.target.classList.contains("previous")) {
+    closeBoardSetupMenu();
   }
+});
+
+results.addEventListener("click", (e) => {
+  if (!e.target.classList.contains("menu-button")) return;
+  const id = e.target.id;
+
+  if (id === "replay" && lastMode) lastMode();
+  else menu.showModal();
+
+  results.close();
+  p1Field.classList.add("focus-field");
 });
