@@ -142,6 +142,8 @@ dialog::backdrop {
     display: flex;
     flex-direction: row;
 
+    border-radius: 16px;
+
     overflow: hidden;
 }
 

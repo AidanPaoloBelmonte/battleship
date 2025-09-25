@@ -39,14 +39,22 @@ function startVersusGame() {
   setupFields();
 }
 
+function startCustomGame() {
+  lastMode = startBoardCustomize;
+
+  setupFields();
+}
+
+function startBoardCustomize() {}
+
 function setupFields() {
-  prepareBoard(p1Field, p1Manager, p1Listener);
-  prepareBoard(p2Field, p2Manager, p2Listener);
+  prepareBoard(p1Field, p1Manager);
+  prepareBoard(p2Field, p2Manager);
 
   resetFieldStatus();
 }
 
-function prepareBoard(field, player, listener) {
+function prepareBoard(field, player) {
   const board = field.querySelector(".board");
 
   generateBoard(board);
