@@ -155,17 +155,16 @@ dialog::backdrop {
     scale: 0.9;
 }
 
-#vs-com > img {
-    content: url(../assets/laptop.svg);
-    width: 128px;
+.menu-button > img {
+    height: 128px;
 
     pointer-events: none;
 }
 
+#vs-com > img {
+    content: url(../assets/laptop.svg);
+}
+
 #vs-player > img {
     content: url(../assets/account-supervisor.svg);
-    width: 128px;
-    height: 128px;
-
-    pointer-events: none;
 }
