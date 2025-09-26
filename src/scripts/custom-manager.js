@@ -7,15 +7,43 @@ class CustomManager {
   takenCells = [];
   baseCell = null;
 
+  clickEvent = null;
+  hoverEvent = null;
+
   constructor() {
     this.ships = [];
     this.takenCells = [];
     this.baseCell = null;
+
+    this.clickEvent = () => {};
+    this.hoverEvent = () => {};
   }
 
   trackCell(cell) {
-    if (this.baseCell !== null) this.createShip(cell);
-    else this.baseCell = cell;
+    if (cell === this.baseCell) {
+      this.baseCell = null;
+      return -2;
+    }
+
+    if (this.baseCell !== null && this.isValidEndPoint(cell)) {
+      return this.createShip(cell);
+    } else if (this.baseCell === null) {
+      this.baseCell = cell;
+      return -1;
+    }
+
+    return -3;
+  }
+
+  isValidEndPoint(index) {
+    if (!this.baseCell) return false;
+
+    const basePosition = this.indexToPosition(this.baseCell);
+    const endPosition = this.indexToPosition(index);
+    const dir = this.getDirection(basePosition, endPosition);
+
+    if ((dir.x != 0 && dir.y != 0) || dir.x === dir.y) return false;
+    return true;
   }
 
   cancelTrack() {
@@ -23,6 +51,26 @@ class CustomManager {
     this.baseCell = null;
 
     return lastCell;
+  }
+
+  getIntermediaryCells(start, end) {
+    const basePosition = this.indexToPosition(start);
+    const endPosition = this.indexToPosition(end);
+    const length = this.getLength(basePosition, endPosition);
+    const dir = this.getDirection(basePosition, endPosition);
+
+    const intermediaries = [];
+    if (dir.x !== 0) {
+      for (let l = 0; l < length; l++) {
+        intermediaries.push(start + (dir.x * l + 1));
+      }
+    } else if (dir.y !== 0) {
+      for (let l = 0; l < length; l + 9) {
+        intermediaries.push(start + (dir.y * l + 1) * 9);
+      }
+    }
+
+    return intermediaries;
   }
 
   createShip(cell) {
@@ -35,7 +83,11 @@ class CustomManager {
     this.ships.push(new Ship(length, start.x, start.y, direction));
     this.takenCells.push(this.baseCell);
     this.takenCells.push(cell);
+
+    const base = this.baseCell;
     this.baseCell = null;
+
+    return base;
   }
 
   positionToIndex(x, y) {

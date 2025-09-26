@@ -9,9 +9,7 @@ class Player {
   constructor() {
     this.gameboard = new GameBoard();
 
-    this.clickEvent = () => {
-      console.log("Wowers");
-    };
+    this.clickEvent = () => {};
     this.hoverEvent = () => {};
   }
 }

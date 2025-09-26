@@ -1,8 +1,9 @@
 import "../styles/style.css";
 
 import { ClassWatcher } from "./watcher";
-import { CustomManager } from "./custom-manager";
 import { Player, Computer } from "./player";
+
+const CustomManager = require("./custom-manager");
 
 const menu = document.querySelector("#main-menu");
 const boardMenu = document.querySelector("#board-setup");
@@ -68,16 +69,53 @@ function startBoardCustomize() {
   p1Manager = new CustomManager();
   p2Manager = new CustomManager();
 
+  trackBoardCustomization(p1Manager, p1Field);
+  trackBoardCustomization(p2Manager, p2Field);
+
   resetFieldStatus();
 }
 
 function trackBoardCustomization(player, field) {
   const board = field.querySelector(".board");
   if (!board) return;
+
+  generateBoard(board);
+
+  player.clickEvent = (e) => defineShipPoints(e, player);
 }
 
-function handleCustomization(e, player, board) {
+function defineShipPoints(e, player) {
   if (!e.target.classList.contains("active")) return;
+
+  const cell = e.target;
+  const cells = Array.from(cell.parentNode.children);
+  const index = cells.indexOf(cell);
+
+  const status = player.trackCell(index);
+  if (status === -1) {
+    trackCell(cell);
+  } else if (status > -1) {
+    const indexes = player.getIntermediaryCells(status, index);
+
+    const intermediaries = indexes.map((i) => {
+      return cells[i];
+    });
+
+    scoutCells(intermediaries);
+  }
+}
+
+function validateShipPoints(e, player) {
+  if (!e.target.classList.contains("active")) return;
+
+  const cell = e.target;
+  const index = Array.from(cell.parentNode.children).indexOf(cell);
+
+  const isValidEndPoint = player.isValidEndPoint(cell);
+
+  if (isValidEndPoint) {
+    const intermediaries = player.getIntermediaryCells(index);
+  }
 }
 
 function setupFields() {
@@ -128,7 +166,7 @@ function attack(e, player) {
   const x = index - y * 9;
   const hit = player.gameboard.receiveAttack(x, y);
 
-  updateCell(cell, hit);
+  hitCell(cell, hit);
   if (!player.gameboard.areAllShipsSunken()) changeTurn();
   else endGame();
 }
@@ -140,7 +178,7 @@ function computerTurn() {
   const board = p2Field.querySelector(".board");
   const cell = board.children[index];
 
-  updateCell(cell, result.hit);
+  hitCell(cell, result.hit);
   if (!p2Manager.gameboard.areAllShipsSunken()) changeTurn();
   else endGame();
 }
@@ -152,10 +190,28 @@ function changeTurn() {
   p2Field.classList.toggle("focus-field");
 }
 
-function updateCell(cell, hit) {
+function hitCell(cell, hit) {
   cell.classList.remove("active");
   if (hit) cell.classList.add("hit");
   else cell.classList.add("miss");
+}
+
+function trackCell(cell) {
+  cell.classList.remove("active");
+  cell.classList.add("hit");
+}
+
+function untrackCell(cell) {
+  cell.classList.remove("active");
+  cell.classList.add("hit");
+}
+
+function scoutCells(cells) {
+  console.log(typeof cells, cells);
+  cells.forEach((cell) => {
+    cell.classList.remove("active");
+    cell.classList.add("hit");
+  });
 }
 
 function endGame() {
@@ -201,6 +257,8 @@ window.onload = () => {
 
   p1Board.addEventListener("click", onPlayer1Click);
   p2Board.addEventListener("click", onPlayer2Click);
+  p1Board.addEventListener("mouseenter", onPlayer1Hover);
+  p2Board.addEventListener("mouseleave", onPlayer2Hover);
 
   generateBoard(p1Board);
   generateBoard(p2Board);
@@ -220,6 +278,9 @@ menu.addEventListener("click", (e) => {
   } else if (id === "random-board") {
     closeBoardSetupMenu();
     startVersusGame();
+    menu.close();
+  } else if (id === "custom-board") {
+    startBoardCustomize();
     menu.close();
   } else if (e.target.classList.contains("previous")) {
     closeBoardSetupMenu();
