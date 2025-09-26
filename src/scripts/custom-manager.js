@@ -40,6 +40,10 @@ class CustomManager {
 
     const basePosition = this.indexToPosition(this.baseCell);
     const endPosition = this.indexToPosition(index);
+
+    if (!(basePosition.x === endPosition.x || basePosition.y === endPosition.y))
+      return false;
+
     const dir = this.getDirection(basePosition, endPosition);
 
     if ((dir.x != 0 && dir.y != 0) || dir.x === dir.y) return false;

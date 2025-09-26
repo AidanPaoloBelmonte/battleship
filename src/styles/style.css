@@ -90,6 +90,23 @@ body {
 
 .cell.hit {
     background-color: palevioletred;
+
+    transition: background-color 100ms ease;
+}
+
+.cell.track {
+    background-color: mediumseagreen;
+}
+
+.cell.hint {
+    background-color: rgba(83, 179, 113, 0.6);
+    scale: 1.1;
+
+    transition: scale 200ms ease;
+}
+
+.cell.invalid {
+    background-color: dimgray;
 }
 
 /*Menus*/

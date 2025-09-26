@@ -15,10 +15,6 @@ const p2Field = document.querySelector("#p2");
 
 let p1Manager = new Player();
 let p2Manager = new Computer();
-let p1ClickAction = () => {};
-let p2ClickAction = () => {};
-let p1HoverAction = () => {};
-let p2HoverAction = () => {};
 
 let watcher = null;
 
@@ -82,6 +78,7 @@ function trackBoardCustomization(player, field) {
   generateBoard(board);
 
   player.clickEvent = (e) => defineShipPoints(e, player);
+  player.hoverEvent = (e) => validateShipPoints(e, player);
 }
 
 function defineShipPoints(e, player) {
@@ -96,25 +93,36 @@ function defineShipPoints(e, player) {
     trackCell(cell);
   } else if (status > -1) {
     const indexes = player.getIntermediaryCells(status, index);
+    indexes.push(status);
+
+    const intermediaries = indexes.map((i) => {
+      let newCell = cells[i];
+    });
+
+    fillCells(intermediaries);
+  }
+}
+
+function validateShipPoints(e, player) {
+  if (player.baseCell === null) return;
+  if (!e.target.classList.contains("active")) return;
+
+  const cell = e.target;
+  const cells = Array.from(cell.parentNode.children);
+  const index = cells.indexOf(cell);
+
+  const isValidEndPoint = player.isValidEndPoint(index);
+
+  if (isValidEndPoint) {
+    const indexes = player.getIntermediaryCells(player.baseCell, index);
 
     const intermediaries = indexes.map((i) => {
       return cells[i];
     });
 
     scoutCells(intermediaries);
-  }
-}
-
-function validateShipPoints(e, player) {
-  if (!e.target.classList.contains("active")) return;
-
-  const cell = e.target;
-  const index = Array.from(cell.parentNode.children).indexOf(cell);
-
-  const isValidEndPoint = player.isValidEndPoint(cell);
-
-  if (isValidEndPoint) {
-    const intermediaries = player.getIntermediaryCells(index);
+  } else {
+    cell.classList.toggle("invalid");
   }
 }
 
@@ -198,19 +206,26 @@ function hitCell(cell, hit) {
 
 function trackCell(cell) {
   cell.classList.remove("active");
-  cell.classList.add("hit");
+  cell.classList.add("track");
 }
 
 function untrackCell(cell) {
-  cell.classList.remove("active");
-  cell.classList.add("hit");
+  cell.classList.add("active");
+  cell.classList.remove("hit");
+}
+
+function fillCells(cells) {
+  cells.forEach((cell) => {
+    cell.classList.remove("active");
+    cell.classList.remove("track");
+    cell.classList.remove("hint");
+    cell.classList.add("hit");
+  });
 }
 
 function scoutCells(cells) {
-  console.log(typeof cells, cells);
   cells.forEach((cell) => {
-    cell.classList.remove("active");
-    cell.classList.add("hit");
+    cell.classList.toggle("hint");
   });
 }
 
@@ -257,8 +272,10 @@ window.onload = () => {
 
   p1Board.addEventListener("click", onPlayer1Click);
   p2Board.addEventListener("click", onPlayer2Click);
-  p1Board.addEventListener("mouseenter", onPlayer1Hover);
-  p2Board.addEventListener("mouseleave", onPlayer2Hover);
+  p1Board.addEventListener("mouseover", onPlayer1Hover);
+  p2Board.addEventListener("mouseover", onPlayer2Hover);
+  p1Board.addEventListener("mouseout", onPlayer1Hover);
+  p2Board.addEventListener("mouseout", onPlayer2Hover);
 
   generateBoard(p1Board);
   generateBoard(p2Board);
