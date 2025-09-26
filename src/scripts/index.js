@@ -82,7 +82,8 @@ function trackBoardCustomization(player, field) {
 }
 
 function defineShipPoints(e, player) {
-  if (!e.target.classList.contains("active")) return;
+  if (!e.target.classList.contains("cell")) return;
+  if (e.target.classList.contains("hit")) return;
 
   const cell = e.target;
   const cells = Array.from(cell.parentNode.children);
@@ -100,6 +101,8 @@ function defineShipPoints(e, player) {
     });
 
     fillCells(intermediaries);
+  } else {
+    untrackCell(cell);
   }
 }
 
@@ -211,7 +214,7 @@ function trackCell(cell) {
 
 function untrackCell(cell) {
   cell.classList.add("active");
-  cell.classList.remove("hit");
+  cell.classList.remove("track");
 }
 
 function fillCells(cells) {
