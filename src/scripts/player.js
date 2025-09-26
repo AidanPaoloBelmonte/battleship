@@ -3,8 +3,14 @@ const GameBoard = require("./gameboard");
 class Player {
   gameboard = null;
 
+  clickEvent = null;
+  hoverEvent = null;
+
   constructor() {
     this.gameboard = new GameBoard();
+
+    this.clickEvent = () => {};
+    this.hoverEvent = () => {};
   }
 }
 
@@ -15,6 +21,9 @@ class Computer extends Player {
   conquerChaseAttempts = 0;
   conquerChaseCount = 0;
 
+  clickEvent = null;
+  hoverEvent = null;
+
   constructor() {
     super();
 
@@ -22,6 +31,9 @@ class Computer extends Player {
     this.lastSuccessfulHitPosition = null;
     this.conquerChaseAttempts = 0;
     this.conquerChaseCount = 0;
+
+    this.clickEvent = () => {};
+    this.hoverEvent = () => {};
   }
 
   makeMove() {

@@ -1,6 +1,7 @@
 import "../styles/style.css";
 
 import { ClassWatcher } from "./watcher";
+import { CustomManager } from "./custom-manager";
 import { Player, Computer } from "./player";
 
 const menu = document.querySelector("#main-menu");
@@ -45,7 +46,21 @@ function startCustomGame() {
   setupFields();
 }
 
-function startBoardCustomize() {}
+function startBoardCustomize() {
+  p1Manager = new CustomManager();
+  p2Manager = new CustomManager();
+
+  resetFieldStatus();
+}
+
+function trackBoardCustomization(player, field) {
+  const board = field.querySelector(".board");
+  if (!board) return;
+}
+
+function handleCustomization(e, player, board) {
+  if (!e.target.classList.contains("active")) return;
+}
 
 function setupFields() {
   prepareBoard(p1Field, p1Manager);
@@ -59,7 +74,7 @@ function prepareBoard(field, player) {
 
   generateBoard(board);
 
-  p1Listener = (e) => attack(e, player);
+  // p1Listener = (e) => attack(e, player);
 
   if (player instanceof Computer)
     watcher = new ClassWatcher(field, "focus-field", computerTurn);
