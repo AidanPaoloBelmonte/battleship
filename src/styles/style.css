@@ -91,7 +91,7 @@ body {
 .cell.hit {
     background-color: palevioletred;
 
-    transition: background-color 100ms ease;
+    transition: background-color 300ms ease;
 }
 
 .cell.track {

@@ -96,7 +96,7 @@ function defineShipPoints(e, player) {
     indexes.push(status);
 
     const intermediaries = indexes.map((i) => {
-      let newCell = cells[i];
+      return cells[i];
     });
 
     fillCells(intermediaries);
