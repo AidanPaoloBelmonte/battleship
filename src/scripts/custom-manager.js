@@ -62,11 +62,11 @@ class CustomManager {
     const intermediaries = [];
     if (dir.x !== 0) {
       for (let l = 0; l < length; l++) {
-        intermediaries.push(start + (dir.x * l + 1));
+        intermediaries.push(start + (dir.x * l + dir.x));
       }
     } else if (dir.y !== 0) {
-      for (let l = 0; l < length; l + 9) {
-        intermediaries.push(start + (dir.y * l + 1) * 9);
+      for (let l = 0; l < length; l++) {
+        intermediaries.push(start + (dir.y * l + dir.y) * 9);
       }
     }
 
