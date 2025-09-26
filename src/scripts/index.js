@@ -14,13 +14,31 @@ const p2Field = document.querySelector("#p2");
 
 let p1Manager = new Player();
 let p2Manager = new Computer();
-let p1Listener = null;
-let p2Listener = null;
+let p1ClickAction = () => {};
+let p2ClickAction = () => {};
+let p1HoverAction = () => {};
+let p2HoverAction = () => {};
 
 let watcher = null;
 
 let lastMode = null;
 let currentPlayer = 0;
+
+function onPlayer1Click(e, player) {
+  p1Manager.clickEvent(e, player);
+}
+
+function onPlayer2Click(e, player) {
+  p2Manager.clickEvent(e, player);
+}
+
+function onPlayer1Hover(e, player) {
+  p1Manager.hoverEvent(e, player);
+}
+
+function onPlayer2Hover(e, player) {
+  p2Manager.hoverEvent(e, player);
+}
 
 function startComputerGame() {
   lastMode = startComputerGame;
@@ -74,11 +92,12 @@ function prepareBoard(field, player) {
 
   generateBoard(board);
 
-  // p1Listener = (e) => attack(e, player);
-
   if (player instanceof Computer)
     watcher = new ClassWatcher(field, "focus-field", computerTurn);
-  else watcher = null;
+  else {
+    watcher = null;
+    player.clickEvent = (e) => attack(e, player);
+  }
 }
 
 function generateBoard(board) {
@@ -180,8 +199,8 @@ window.onload = () => {
   const p1Board = p1Field.querySelector(".board");
   const p2Board = p2Field.querySelector(".board");
 
-  p1Board.addEventListener("click", (e) => attack(e, p1Manager));
-  p2Board.addEventListener("click", (e) => attack(e, p2Manager));
+  p1Board.addEventListener("click", onPlayer1Click);
+  p2Board.addEventListener("click", onPlayer2Click);
 
   generateBoard(p1Board);
   generateBoard(p2Board);
