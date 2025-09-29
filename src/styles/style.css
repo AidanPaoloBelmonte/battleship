@@ -278,6 +278,10 @@ dialog::backdrop {
     }
 }
 
+#customize-ui.hide {
+    display: none;
+}
+
 #ready {
     position: fixed;
 
@@ -294,7 +298,7 @@ dialog::backdrop {
         opacity 200ms ease,
         scale 200ms ease;
 
-    font-size: 1.2rem;
+    font-size: 1rem;
 }
 
 #ready.enabled {
@@ -306,6 +310,6 @@ dialog::backdrop {
     scale: 1.1;
 }
 
-#ready.enabled:hover {
+#ready.enabled:active {
     scale: 0.9;
 }

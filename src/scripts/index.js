@@ -9,6 +9,8 @@ const menu = document.querySelector("#main-menu");
 const boardMenu = document.querySelector("#board-setup");
 const results = document.querySelector("#end-game");
 const previous = document.querySelector(".previous");
+const customizeUI = document.querySelector("#customize-ui");
+const ready = customizeUI.querySelector("#ready");
 
 const p1Field = document.querySelector("#p1");
 const p2Field = document.querySelector("#p2");
@@ -62,6 +64,8 @@ function startCustomGame() {
 }
 
 function startBoardCustomize() {
+  customizeUI.classList.remove("hide");
+
   p1Manager = new CustomManager();
   p2Manager = new CustomManager();
 
@@ -101,6 +105,7 @@ function defineShipPoints(e, player) {
     });
 
     fillCells(intermediaries);
+    ready.classList.add("enabled");
   } else {
     untrackCell(cell);
   }
@@ -316,4 +321,17 @@ results.addEventListener("click", (e) => {
 
   results.close();
   p1Field.classList.add("focus-field");
+});
+
+ready.addEventListener("click", (e) => {
+  if (!ready.classList.contains("enabled")) return;
+
+  if (currentPlayer === 0) {
+    changeTurn();
+    ready.classList.remove("enabled");
+  } else {
+    startCustomGame();
+    ready.classList.remove("enabled");
+    customizeUI.classList.add("hide");
+  }
 });
