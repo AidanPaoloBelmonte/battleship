@@ -15,7 +15,10 @@ class GameBoard {
   }
 
   fromCustom(ships) {
-    this.ships = ships;
+    this.ships = ships.map((ship) => {
+      ship.length++;
+      return ship;
+    });
   }
 
   generate(customLengthBudget = 0) {
