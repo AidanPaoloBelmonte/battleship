@@ -256,3 +256,56 @@ dialog::backdrop {
 #custom-board > img {
     content: url(../assets/pencil.svg);
 }
+
+/*Customize UI*/
+#customize-ui {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+
+    padding: 12px;
+    border: 2px solid mediumseagreen;
+    border-radius: 8px;
+
+    flex: 0 0 auto;
+
+    background-color: transparent;
+
+    pointer-events: none;
+
+    * {
+        pointer-events: auto;
+    }
+}
+
+#ready {
+    position: fixed;
+
+    padding: 8px 32px 8px 12px;
+    border: 1px solid slategray;
+    border-radius: 16px 100% 100% 16px;
+
+    outline: 0px;
+    background-color: transparent;
+    opacity: 40%;
+    scale: 0.8;
+
+    transition:
+        opacity 200ms ease,
+        scale 200ms ease;
+
+    font-size: 1.2rem;
+}
+
+#ready.enabled {
+    opacity: 100%;
+    scale: 1;
+}
+
+#ready.enabled:hover {
+    scale: 1.1;
+}
+
+#ready.enabled:hover {
+    scale: 0.9;
+}
