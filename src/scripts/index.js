@@ -60,6 +60,12 @@ function startVersusGame() {
 function startCustomGame() {
   lastMode = startBoardCustomize;
 
+  const p1Ships = p1Manager.ships;
+  const p2Ships = p2Manager.ships;
+
+  p1Manager = new Player(p1Ships);
+  p2Manager = new Player(p2Ships);
+
   setupFields();
 }
 

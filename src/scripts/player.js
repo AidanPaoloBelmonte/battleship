@@ -6,8 +6,8 @@ class Player {
   clickEvent = null;
   hoverEvent = null;
 
-  constructor() {
-    this.gameboard = new GameBoard();
+  constructor(ships = null) {
+    this.gameboard = new GameBoard(0, ships);
 
     this.clickEvent = () => {};
     this.hoverEvent = () => {};

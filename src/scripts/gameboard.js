@@ -6,14 +6,19 @@ class GameBoard {
   ships = [];
   freeCells = [];
 
-  constructor(customLengthBudget = 0) {
+  constructor(customLengthBudget = 0, ships = null) {
     this.ships = [];
     this.freeCells = [];
 
-    this.init(customLengthBudget);
+    if (ships) this.fromCustom(ships);
+    else this.generate(customLengthBudget);
   }
 
-  init(customLengthBudget = 0) {
+  fromCustom(ships) {
+    this.ships = ships;
+  }
+
+  generate(customLengthBudget = 0) {
     for (let l = 0; l < board_size * board_size; l++) this.freeCells.push(l);
 
     let shipsLengthBudget = customLengthBudget;
