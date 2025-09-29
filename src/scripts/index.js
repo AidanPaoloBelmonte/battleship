@@ -144,7 +144,7 @@ function prepareBoard(field, player) {
   if (player instanceof Computer)
     watcher = new ClassWatcher(field, "focus-field", computerTurn);
   else {
-    watcher = null;
+    if (watcher) watcher.disconnect();
     player.clickEvent = (e) => attack(e, player);
   }
 }
