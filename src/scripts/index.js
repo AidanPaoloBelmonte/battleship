@@ -141,6 +141,8 @@ function validateShipPoints(e, player) {
 }
 
 function setupFields() {
+  currentPlayer = 0;
+
   prepareBoard(p1Field, p1Manager);
   prepareBoard(p2Field, p2Manager);
 
@@ -334,6 +336,7 @@ ready.addEventListener("click", (e) => {
 
   if (currentPlayer === 0) {
     changeTurn();
+    generateBoard(p1Field.querySelector(".board"));
     ready.classList.remove("enabled");
   } else {
     startCustomGame();
